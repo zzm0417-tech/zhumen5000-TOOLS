@@ -19,7 +19,7 @@ const tools: Tool[] = [
   { id: "fx", name: "多币种快捷换算", eyebrow: "FINANCE · LIVE", desc: "AED、SAR、CNY、USD、EUR 即时换算", category: "生活", tone: "cyan", mark: "¥" },
   { id: "freight", name: "快递体积重", eyebrow: "SHIPPING", desc: "比较实际重量与体积重量，估算计费重", category: "生活", tone: "orange", mark: "◫" },
   { id: "time", name: "双城时间", eyebrow: "DUBAI · SHANGHAI", desc: "迪拜与上海时间即时对照", category: "生活", tone: "indigo", mark: "◷" },
-  { id: "english", name: "每日英语", eyebrow: "DAILY · 08:00 DXB", desc: "5 个单词、3 个句子、对话、复习与表达模板", category: "学习", tone: "blue", mark: "Aa" },
+  { id: "english", name: "每日英语", eyebrow: "DAILY · 08:00 DXB", desc: "5 个单词、3 个句子、对话、复习与表达模板", category: "学习", tone: "blue", mark: "Aa", href: "/english" },
   { id: "market", name: "MEA 电商分析", eyebrow: "WORKSPACE", desc: "市场数据、SMR 与渠道报告工作台", category: "工作", tone: "amber", mark: "▥", status: "规划中" },
 ];
 
@@ -42,8 +42,9 @@ export default function Home() {
   ), [category, query]);
 
   const openTool = (tool: Tool) => {
-    if (tool.href) window.open(tool.href, "_blank", "noopener,noreferrer");
-    else if (["fx", "unit", "freight", "time", "english"].includes(tool.id)) setActive(tool.id);
+    if (tool.href?.startsWith("/")) window.location.assign(tool.href);
+    else if (tool.href) window.open(tool.href, "_blank", "noopener,noreferrer");
+    else if (["fx", "unit", "freight", "time"].includes(tool.id)) setActive(tool.id);
   };
 
   return (
@@ -106,13 +107,12 @@ function ToolPanel({ id, now, close }: { id: string; now: Date; close: () => voi
 
   const baseAED = value / (rates[from] || 1);
   return <div className="modal-backdrop" onMouseDown={close}>
-    <section className={`panel ${id === "english" ? "english-panel" : ""}`} onMouseDown={(e) => e.stopPropagation()}>
+    <section className="panel" onMouseDown={(e) => e.stopPropagation()}>
       <button className="close" onClick={close} aria-label="关闭">×</button>
       {id === "fx" && <><PanelTitle over="LIVE RATE" title="多币种汇率" /><div className="input-row"><input type="number" value={value} onChange={e => setValue(Number(e.target.value))} /><select value={from} onChange={e => setFrom(e.target.value)}>{Object.keys(rates).map(c => <option key={c}>{c}</option>)}</select></div><div className="results">{Object.entries(rates).filter(([c]) => c !== from).map(([c, r]) => <div key={c}><span>{c}</span><strong>{(baseAED * r).toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong></div>)}</div><p className="note">联网时自动获取最新参考汇率；实际结算以银行为准。</p></>}
       {id === "unit" && <UnitTool />}
       {id === "freight" && <><PanelTitle over="VOLUMETRIC WEIGHT" title="快递体积重" /><div className="dimension-grid">{(["l","w","h","weight"] as const).map((k) => <label key={k}><span>{{l:"长 / CM",w:"宽 / CM",h:"高 / CM",weight:"实重 / KG"}[k]}</span><input type="number" value={dims[k]} onChange={e => setDims({...dims,[k]:Number(e.target.value)})} /></label>)}</div><div className="big-result"><span>国际快递计费重</span><strong>{Math.max(dims.weight, dims.l*dims.w*dims.h/5000).toFixed(1)} <small>KG</small></strong></div><p className="note">按常用除数 5000 估算；不同承运商规则可能不同。</p></>}
       {id === "time" && <><PanelTitle over="WORLD CLOCK" title="双城时间" /><div className="clock-grid"><div><span>迪拜</span><strong>{formatTime(now,"Asia/Dubai")}</strong><small>{formatDate(now,"Asia/Dubai")}</small></div><div><span>上海</span><strong>{formatTime(now,"Asia/Shanghai")}</strong><small>{formatDate(now,"Asia/Shanghai")} · +4H</small></div></div></>}
-      {id === "english" && <EnglishDaily now={now} />}
     </section>
   </div>;
 }
@@ -140,6 +140,8 @@ const lifeLessons:Lesson[]=[
 function dubaiDay(now:Date){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Dubai",year:"numeric",month:"2-digit",day:"2-digit",weekday:"short",hour:"2-digit",hour12:false}).formatToParts(now);const get=(t:string)=>p.find(x=>x.type===t)?.value||"";const date=`${get("year")}-${get("month")}-${get("day")}`;const weekday=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(get("weekday"));const hour=Number(get("hour"));const effective=new Date(`${date}T00:00:00Z`);if(hour<8)effective.setUTCDate(effective.getUTCDate()-1);return {key:effective.toISOString().slice(0,10),weekday:effective.getUTCDay()};}
 function lessonFor(now:Date,offset=0){const d=dubaiDay(now);const date=new Date(`${d.key}T00:00:00Z`);date.setUTCDate(date.getUTCDate()+offset);const weekend=[0,6].includes(date.getUTCDay());const bank=weekend?lifeLessons:workLessons;const epoch=Math.floor(date.getTime()/86400000);return {lesson:bank[((epoch%bank.length)+bank.length)%bank.length],date,weekend};}
 function EnglishDaily({now}:{now:Date}){const today=lessonFor(now),yesterday=lessonFor(now,-1);const l=today.lesson;return <div className="english-daily"><div className="lesson-hero"><div><small>{today.weekend?"WEEKEND · LIFE ENGLISH":"WEEKDAY · WORK ENGLISH"}</small><h2>{l.theme}</h2><p>{today.date.toLocaleDateString("zh-CN",{month:"long",day:"numeric",weekday:"long",timeZone:"UTC"})} · 每天 08:00（迪拜）更新</p></div><span>DAY<br/><b>{String(Math.floor(today.date.getTime()/86400000)%1000).padStart(3,"0")}</b></span></div><section className="lesson-block"><header><b>01</b><h3>今日 5 词</h3><small>{l.scene}</small></header><div className="word-list">{l.words.map(([w,c,e])=><article key={w}><strong>{w}</strong><span>{c}</span><p>{e}</p></article>)}</div></section><section className="lesson-block"><header><b>02</b><h3>高频句子</h3></header><div className="sentence-list">{l.sentences.map(([e,c],i)=><article key={e}><b>0{i+1}</b><div><strong>{e}</strong><span>{c}</span></div></article>)}</div></section><div className="lesson-split"><section className="lesson-block"><header><b>03</b><h3>迷你对话</h3></header><div className="dialogue">{l.dialogue.map(([who,line],i)=><p key={i}><b>{who}</b><span>{line}</span></p>)}</div></section><section className="lesson-block template-card"><header><b>04</b><h3>直接套用</h3></header><blockquote>{l.template}</blockquote></section></div><section className="review-card"><small>YESTERDAY REVIEW · {yesterday.lesson.theme}</small><h3>昨日复习题</h3><p>{yesterday.lesson.quiz}</p><button onClick={(e)=>{const el=e.currentTarget.nextElementSibling as HTMLElement;el.hidden=!el.hidden}}>查看参考表达</button><span hidden>{yesterday.lesson.template}</span></section></div>}
+
+export { EnglishDaily };
 
 function PanelTitle({ over, title }: {over:string,title:string}) { return <header className="panel-title"><small>{over}</small><h2>{title}</h2></header> }
 function formatTime(d: Date, zone: string) { return new Intl.DateTimeFormat("zh-CN", { timeZone: zone, hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false }).format(d) }
