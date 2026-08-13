@@ -1,6 +1,210 @@
 {
+  "schemaVersion": 2,
   "dates": [
     "2026-08-13"
   ],
-  "updatedAt": "2026-08-13T05:46:19.865Z"
+  "updatedAt": "2026-08-13T11:03:26.564Z",
+  "latestRun": {
+    "schemaVersion": 2,
+    "runId": "2026-08-13T11-03-26-564Z",
+    "date": "2026-08-13",
+    "generatedAt": "2026-08-13T11:03:26.564Z",
+    "attempted": 24,
+    "successful": 0,
+    "failed": 24,
+    "targets": [
+      {
+        "country": "AE",
+        "platform": "amazon",
+        "category": "phone",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "amazon",
+        "category": "audio",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "amazon",
+        "category": "wearable",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "amazon",
+        "category": "tablet",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "noon",
+        "category": "phone",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/uae-en/search/?q=smartphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/uae-en/search/?q=smartphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "noon",
+        "category": "audio",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/uae-en/search/?q=wireless%20earbuds%20headphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/uae-en/search/?q=wireless%20earbuds%20headphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "noon",
+        "category": "wearable",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/uae-en/search/?q=smart%20watches%20fitness%20trackers&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/uae-en/search/?q=smart%20watches%20fitness%20trackers&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "AE",
+        "platform": "noon",
+        "category": "tablet",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/uae-en/search/?q=tablets&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/uae-en/search/?q=tablets&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "amazon",
+        "category": "phone",
+        "status": "failed",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.sa/s?k=smartphones&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.sa/s?k=smartphones&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "amazon",
+        "category": "audio",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "amazon",
+        "category": "wearable",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "amazon",
+        "category": "tablet",
+        "status": "failed",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "noon",
+        "category": "phone",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/saudi-en/search/?q=smartphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/saudi-en/search/?q=smartphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "noon",
+        "category": "audio",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/saudi-en/search/?q=wireless%20earbuds%20headphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/saudi-en/search/?q=wireless%20earbuds%20headphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "noon",
+        "category": "wearable",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/saudi-en/search/?q=smart%20watches%20fitness%20trackers&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/saudi-en/search/?q=smart%20watches%20fitness%20trackers&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "SA",
+        "platform": "noon",
+        "category": "tablet",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/saudi-en/search/?q=tablets&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/saudi-en/search/?q=tablets&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "amazon",
+        "category": "phone",
+        "status": "failed",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.eg/s?k=smartphones&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.eg/s?k=smartphones&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "amazon",
+        "category": "audio",
+        "status": "failed",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.eg/s?k=wireless%20earbuds%20headphones&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.eg/s?k=wireless%20earbuds%20headphones&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "amazon",
+        "category": "wearable",
+        "status": "failed",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.eg/s?k=smart%20watches%20fitness%20trackers&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.eg/s?k=smart%20watches%20fitness%20trackers&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "amazon",
+        "category": "tablet",
+        "status": "failed",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.eg/s?k=tablets&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.eg/s?k=tablets&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "noon",
+        "category": "phone",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/egypt-en/search/?q=smartphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/egypt-en/search/?q=smartphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "noon",
+        "category": "audio",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/egypt-en/search/?q=wireless%20earbuds%20headphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/egypt-en/search/?q=wireless%20earbuds%20headphones&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "noon",
+        "category": "wearable",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/egypt-en/search/?q=smart%20watches%20fitness%20trackers&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/egypt-en/search/?q=smart%20watches%20fitness%20trackers&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      },
+      {
+        "country": "EG",
+        "platform": "noon",
+        "category": "tablet",
+        "status": "failed",
+        "error": "page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://www.noon.com/egypt-en/search/?q=tablets&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\nCall log:\n  - navigating to \"https://www.noon.com/egypt-en/search/?q=tablets&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc\", waiting until \"domcontentloaded\"\n",
+        "records": 0
+      }
+    ]
+  }
 }
