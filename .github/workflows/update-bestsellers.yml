@@ -1,28 +1,52 @@
 name: Update bestseller snapshots
+
 on:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
+
 permissions:
   contents: write
+
 concurrency:
   group: bestseller-snapshot
   cancel-in-progress: false
+
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.54.0
+          npx playwright install --with-deps chromium
+
       - name: Collect Amazon and Noon rankings
         run: node scripts/scrape-bestsellers.mjs
+
+      - name: Upload run evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bestseller-run-${{ github.run_id }}
+          path: public/data/bestsellers/_runs/
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Save daily snapshot
         run: |
           git config user.name "bestseller-radar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add public/data/bestsellers
-          git diff --cached --quiet || git commit -m "data: update daily bestseller snapshot"
-          git push
+          git diff --cached --quiet && exit 0
+          git commit -m "data: update daily bestseller snapshot"
+          git pull --rebase origin main
+          git push origin HEAD:main
