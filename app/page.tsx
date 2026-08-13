@@ -142,14 +142,13 @@ const lifeLessons:Lesson[]=[
 ];
 function dubaiDay(now:Date){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Dubai",year:"numeric",month:"2-digit",day:"2-digit",weekday:"short",hour:"2-digit",hour12:false}).formatToParts(now);const get=(t:string)=>p.find(x=>x.type===t)?.value||"";const date=`${get("year")}-${get("month")}-${get("day")}`;const weekday=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(get("weekday"));const hour=Number(get("hour"));const effective=new Date(`${date}T00:00:00Z`);if(hour<8)effective.setUTCDate(effective.getUTCDate()-1);return {key:effective.toISOString().slice(0,10),weekday:effective.getUTCDay()};}
 function lessonForDate(date:Date){const weekend=[0,6].includes(date.getUTCDay());const bank=weekend?lifeLessons:workLessons;const epoch=Math.floor(date.getTime()/86400000);return {lesson:bank[((epoch%bank.length)+bank.length)%bank.length],date,weekend};}
-function lessonFor(now:Date,offset=0){const d=dubaiDay(now);const date=new Date(`${d.key}T00:00:00Z`);date.setUTCDate(date.getUTCDate()+offset);return lessonForDate(date);}
 function EnglishDaily({now}:{now:Date}){
   const currentKey=dubaiDay(now).key;
   const [selectedKey,setSelectedKey]=useState(currentKey);
   const [answers,setAnswers]=useState<Record<number,string>>({});
   const [submitted,setSubmitted]=useState(false);
   const archive=useMemo(()=>{const items:{key:string;label:string;lesson:ReturnType<typeof lessonForDate>}[]=[];const cursor=new Date("2026-07-28T00:00:00Z");const end=new Date(`${currentKey}T00:00:00Z`);while(cursor<=end){const date=new Date(cursor);items.unshift({key:date.toISOString().slice(0,10),label:date.toLocaleDateString("zh-CN",{month:"long",day:"numeric",weekday:"short",timeZone:"UTC"}),lesson:lessonForDate(date)});cursor.setUTCDate(cursor.getUTCDate()+1)}return items},[currentKey]);
-  const selected=archive.find(item=>item.key===selectedKey)??archive[0];
+  const selected=archive.find(item=>item.key===selectedKey)??archive[0]!;
   const today=selected.lesson,l=today.lesson;
   const dayNumber=archive.length-archive.findIndex(item=>item.key===selectedKey);
   const normalize=(value:string)=>value.trim().toLocaleLowerCase().replace(/[.?!。！？]$/g,"");
