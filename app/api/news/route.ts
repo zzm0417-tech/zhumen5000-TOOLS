@@ -11,7 +11,8 @@ export async function GET(){
     const xml=await fetch(url,{headers:{"User-Agent":"Mozilla/5.0 AlexToolbox/1.0"}}).then(r=>{if(!r.ok)throw new Error(`feed ${r.status}`);return r.text()});
     return parseItems(xml,feed.category).slice(0,6);
   }));
-  const items=settled.flatMap(result=>result.status==="fulfilled"?result.value:[]).sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt));
+  const raw=settled.flatMap(result=>result.status==="fulfilled"?result.value:[]).sort((a,b)=>Date.parse(b.publishedAt)-Date.parse(a.publishedAt));
+  const items=await Promise.all(raw.map(async item=>({...item,title:await translateToChinese(item.title)})));
   return Response.json({updatedAt:new Date().toISOString(),items},{headers:{"Cache-Control":"public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600"}});
 }
 
@@ -25,3 +26,12 @@ function parseItems(xml:string,category:string){
 }
 function read(block:string,tag:string){return block.match(new RegExp(`<${tag}(?:\\s[^>]*)?>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?<\\/${tag}>`))?.[1]?.trim()||""}
 function decode(value:string){return value.replace(/&amp;/g,"&").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,"<").replace(/&gt;/g,">")}
+async function translateToChinese(text:string){
+  if(/[\u3400-\u9fff]/.test(text))return text;
+  try{
+    const url=`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=${encodeURIComponent(text)}`;
+    const data=await fetch(url,{headers:{"User-Agent":"Mozilla/5.0 AlexToolbox/1.0"}}).then(r=>{if(!r.ok)throw new Error("translation failed");return r.json()}) as unknown[][];
+    const translated=(data[0] as unknown[][]).map(part=>String(part[0]||"")).join("").trim();
+    return translated||text;
+  }catch{return text}
+}
