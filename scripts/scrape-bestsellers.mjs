@@ -1,17 +1,223 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { chromium } from "playwright";
 
-const countries={AE:{amazon:"amazon.ae",noon:"uae-en"},SA:{amazon:"amazon.sa",noon:"saudi-en"},EG:{amazon:"amazon.eg",noon:"egypt-en"}};
-const categories={phone:"smartphones",audio:"wireless earbuds",wearable:"smart watches",tablet:"tablets"};
-const outDir=path.resolve("public/data/bestsellers");
-const now=new Date(),date=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Dubai",year:"numeric",month:"2-digit",day:"2-digit"}).format(now);
-const clean=s=>s.replace(/<[^>]*>/g," ").replace(/&amp;/g,"&").replace(/&#39;/g,"'").replace(/&quot;/g,'"').replace(/\s+/g," ").trim();
-const brandOf=name=>(name.match(/^(Apple|Samsung|Huawei|HONOR|Xiaomi|Redmi|Nothing|OnePlus|OPPO|vivo|realme|JBL|Sony|Bose|Anker|Soundcore|Garmin|Amazfit|Lenovo)/i)?.[0]||"").toUpperCase();
+const countries = {
+  AE: { amazon: "amazon.ae", noon: "uae-en", currency: "AED" },
+  SA: { amazon: "amazon.sa", noon: "saudi-en", currency: "SAR" },
+  EG: { amazon: "amazon.eg", noon: "egypt-en", currency: "EGP" },
+};
+const categories = {
+  phone: "smartphones",
+  audio: "wireless earbuds headphones",
+  wearable: "smart watches fitness trackers",
+  tablet: "tablets",
+};
+const outDir = path.resolve("public/data/bestsellers");
+const now = new Date();
+const runId = now.toISOString().replace(/[:.]/g, "-");
+const date = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Dubai", year: "numeric", month: "2-digit", day: "2-digit",
+}).format(now);
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const text = async locator => {
+  try { return (await locator.first().innerText({ timeout: 1500 })).trim() || null; }
+  catch { return null; }
+};
+const attr = async (locator, name) => {
+  try { return await locator.first().getAttribute(name, { timeout: 1500 }); }
+  catch { return null; }
+};
+const number = value => {
+  const match = String(value ?? "").replace(/,/g, "").match(/\d+(?:\.\d+)?/);
+  return match ? Number(match[0]) : null;
+};
+const brandOf = name => (name.match(/^(Apple|Samsung|Huawei|HONOR|Xiaomi|Redmi|Nothing|OnePlus|OPPO|vivo|realme|JBL|Sony|Bose|Anker|Soundcore|Garmin|Amazfit|Lenovo|Motorola)/i)?.[0] || "").toUpperCase();
 
-async function fetchHtml(url){const c=new AbortController(),timer=setTimeout(()=>c.abort(),25000);try{const r=await fetch(url,{signal:c.signal,redirect:"follow",headers:{"user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36","accept-language":"en-US,en;q=0.9"}});if(!r.ok)throw Error(`HTTP ${r.status}`);const html=await r.text();if(/captcha|robot check|access denied|not a robot/i.test(html))throw Error("平台触发验证码或访问限制");return html}finally{clearTimeout(timer)}}
-function parseAmazon(html,base){const blocks=html.split(/data-component-type="s-search-result"/).slice(1),items=[];for(const b of blocks){const id=b.match(/data-asin="([A-Z0-9]+)"/)?.[1],name=clean(b.match(/<h2[^>]*>[\s\S]*?<span[^>]*>([\s\S]*?)<\/span>/)?.[1]||""),href=b.match(/<a[^>]+href="([^"]+)"[^>]*class="[^"]*a-link-normal[^"]*s-no-outline/)?.[1],price=clean(b.match(/class="a-price"[\s\S]*?<span class="a-offscreen">([^<]+)/)?.[1]||"");if(id&&name&&href)items.push({rank:items.length+1,id,brand:brandOf(name),name,price,url:new URL(href,base).href});if(items.length===20)break}return items}
-function parseNoon(html,base){const items=[];for(const m of html.matchAll(/"sku":"([^"]+)"[\s\S]{0,1600}?"name":"([^"]+)"[\s\S]{0,800}?"price":(?:\{"value":)?([0-9.]+)/g)){const[id,name,price]=[m[1],clean(m[2]),m[3]];if(items.some(x=>x.id===id))continue;items.push({rank:items.length+1,id,brand:brandOf(name),name,price,url:`${base}/search?q=${encodeURIComponent(name)}`});if(items.length===20)break}return items}
-async function scrape(country,platform,category){const host=countries[country][platform],q=categories[category],base=platform==="amazon"?`https://www.${host}`:`https://www.noon.com/${host}`,url=platform==="amazon"?`${base}/s?k=${encodeURIComponent(q)}&s=exact-aware-popularity-rank`:`${base}/search?q=${encodeURIComponent(q)}&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc`;try{const html=await fetchHtml(url),products=platform==="amazon"?parseAmazon(html,base):parseNoon(html,base);if(products.length<5)throw Error(`页面解析仅得到 ${products.length} 个商品，未达到最低完整性要求`);return{country,platform,category,status:"success",fetchedAt:now.toISOString(),lastSuccessAt:now.toISOString(),error:null,products}}catch(e){return{country,platform,category,status:"failed",fetchedAt:now.toISOString(),lastSuccessAt:null,error:e instanceof Error?e.message:"未知抓取错误",products:[]}}}
-await fs.mkdir(outDir,{recursive:true});const tasks=[];for(const country of Object.keys(countries))for(const platform of ["amazon","noon"])for(const category of Object.keys(categories))tasks.push([country,platform,category]);const boards=[];for(let i=0;i<tasks.length;i+=4)boards.push(...await Promise.all(tasks.slice(i,i+4).map(x=>scrape(...x))));
-try{const index=JSON.parse(await fs.readFile(path.join(outDir,"index.json"),"utf8"));for(const b of boards.filter(x=>x.status==="failed")){for(const d of index.dates||[]){try{const old=JSON.parse(await fs.readFile(path.join(outDir,`${d}.json`),"utf8")),match=old.boards.find(x=>x.country===b.country&&x.platform===b.platform&&x.category===b.category&&x.status==="success");if(match){b.lastSuccessAt=match.fetchedAt;break}}catch{}}}}catch{}
-await fs.writeFile(path.join(outDir,`${date}.json`),JSON.stringify({date,generatedAt:now.toISOString(),boards},null,2)+"\n");let dates=[];try{dates=JSON.parse(await fs.readFile(path.join(outDir,"index.json"),"utf8")).dates||[]}catch{}dates=[date,...dates.filter(x=>x!==date)].slice(0,120);await fs.writeFile(path.join(outDir,"index.json"),JSON.stringify({dates,updatedAt:now.toISOString()},null,2)+"\n");console.log(JSON.stringify({date,success:boards.filter(x=>x.status==="success").length,failed:boards.filter(x=>x.status==="failed").length}));
+function sourceFor(country, platform, category) {
+  const market = countries[country];
+  const query = encodeURIComponent(categories[category]);
+  if (platform === "amazon") {
+    return `https://www.${market.amazon}/s?k=${query}&s=exact-aware-popularity-rank`;
+  }
+  return `https://www.noon.com/${market.noon}/search/?q=${query}&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc`;
+}
+
+async function parseAmazon(page, meta) {
+  const cards = page.locator('[data-component-type="s-search-result"][data-asin]');
+  const products = [];
+  for (let i = 0; i < await cards.count() && products.length < 50; i++) {
+    const card = cards.nth(i);
+    const whole = (await text(card)) || "";
+    if (/sponsored/i.test(whole)) continue;
+    const id = await attr(card, "data-asin");
+    const name = await text(card.locator("h2"));
+    const href = await attr(card.locator("h2 a"), "href");
+    if (!id || !name || !href) continue;
+    const priceText = await text(card.locator(".a-price .a-offscreen"));
+    const oldPriceText = await text(card.locator(".a-text-price .a-offscreen"));
+    const ratingText = await text(card.locator(".a-icon-alt"));
+    const reviewText = await text(card.locator('[aria-label$="ratings"], [aria-label$="rating"]'));
+    products.push({
+      observedRank: products.length + 1,
+      marketplaceRank: null,
+      id,
+      brand: brandOf(name),
+      name,
+      price: number(priceText),
+      priceText,
+      originalPrice: number(oldPriceText),
+      originalPriceText: oldPriceText,
+      currency: countries[meta.country].currency,
+      rating: number(ratingText),
+      reviewCount: number(reviewText),
+      bestsellerBadge: /best.?seller/i.test(whole),
+      sponsored: false,
+      availability: /out of stock|currently unavailable/i.test(whole) ? "unavailable" : "unknown",
+      productUrl: new URL(href, meta.sourceUrl).href,
+      imageUrl: await attr(card.locator("img.s-image"), "src"),
+    });
+  }
+  return products;
+}
+
+async function parseNoon(page, meta) {
+  const cards = page.locator('div[data-qa="product-box"], div[data-qa="product-card"], a[href*="/p/"]');
+  const products = [];
+  const seen = new Set();
+  for (let i = 0; i < await cards.count() && products.length < 50; i++) {
+    const card = cards.nth(i);
+    const whole = (await text(card)) || "";
+    const href = await attr(card.locator('a[href*="/p/"]'), "href") || await attr(card, "href");
+    const id = href?.match(/\/p\/([^/?]+)/)?.[1] || null;
+    const name = await text(card.locator('[data-qa="product-name"], h2, h3, [title]'));
+    const key = id || href || name;
+    if (!name || !href || !key || seen.has(key)) continue;
+    seen.add(key);
+    const priceText = await text(card.locator('[data-qa="product-price"], [class*="priceNow"], [class*="Price"]'));
+    const oldPriceText = await text(card.locator('[class*="priceWas"], del'));
+    const ratingText = await text(card.locator('[data-qa="product-rating"], [class*="rating"]'));
+    const reviewText = await text(card.locator('[class*="review"], [class*="count"]'));
+    const marketplaceRank = number(whole.match(/#\s*\d+\s+in\s+/i)?.[0]);
+    products.push({
+      observedRank: products.length + 1,
+      marketplaceRank,
+      id,
+      brand: brandOf(name),
+      name,
+      price: number(priceText),
+      priceText,
+      originalPrice: number(oldPriceText),
+      originalPriceText: oldPriceText,
+      currency: countries[meta.country].currency,
+      rating: number(ratingText),
+      reviewCount: number(reviewText),
+      bestsellerBadge: /best.?seller/i.test(whole),
+      sponsored: false,
+      availability: /out of stock|currently unavailable/i.test(whole) ? "unavailable" : "unknown",
+      productUrl: new URL(href, meta.sourceUrl).href,
+      imageUrl: await attr(card.locator("img"), "src"),
+    });
+  }
+  return products;
+}
+
+async function scrape(context, country, platform, category) {
+  const sourceUrl = sourceFor(country, platform, category);
+  const meta = {
+    country, platform, category, sourceUrl,
+    sourceType: platform === "amazon" ? "search_popularity" : "marketplace_popularity",
+    fetchedAt: now.toISOString(),
+  };
+  const page = await context.newPage();
+  try {
+    const response = await page.goto(sourceUrl, { waitUntil: "domcontentloaded", timeout: 45000 });
+    await page.waitForTimeout(3000);
+    const body = ((await page.locator("body").innerText()).slice(0, 6000)).toLowerCase();
+    if (response && response.status() >= 400) throw new Error(`HTTP ${response.status()}`);
+    if (["captcha", "robot check", "access denied", "enter the characters"].some(term => body.includes(term))) {
+      throw new Error("平台触发验证码或访问限制");
+    }
+    const products = platform === "amazon" ? await parseAmazon(page, meta) : await parseNoon(page, meta);
+    if (products.length < 5) throw new Error(`页面解析仅得到 ${products.length} 个商品，未达到最低完整性要求`);
+    return { ...meta, status: "success", lastSuccessAt: now.toISOString(), error: null, products };
+  } catch (error) {
+    return {
+      ...meta,
+      status: "failed",
+      lastSuccessAt: null,
+      error: error instanceof Error ? error.message : "未知抓取错误",
+      products: [],
+    };
+  } finally {
+    await page.close();
+  }
+}
+
+async function addLastSuccess(boards) {
+  let dates = [];
+  try { dates = JSON.parse(await fs.readFile(path.join(outDir, "index.json"), "utf8")).dates || []; }
+  catch {}
+  for (const board of boards.filter(item => item.status === "failed")) {
+    for (const oldDate of dates) {
+      try {
+        const old = JSON.parse(await fs.readFile(path.join(outDir, `${oldDate}.json`), "utf8"));
+        const match = old.boards.find(item =>
+          item.country === board.country &&
+          item.platform === board.platform &&
+          item.category === board.category &&
+          item.status === "success"
+        );
+        if (match) { board.lastSuccessAt = match.fetchedAt; break; }
+      } catch {}
+    }
+  }
+}
+
+await fs.mkdir(path.join(outDir, "_runs", date), { recursive: true });
+const browser = await chromium.launch({ headless: true });
+const context = await browser.newContext({
+  locale: "en-US",
+  viewport: { width: 1440, height: 1200 },
+  userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36",
+});
+const boards = [];
+for (const country of Object.keys(countries)) {
+  for (const platform of ["amazon", "noon"]) {
+    for (const category of Object.keys(categories)) {
+      boards.push(await scrape(context, country, platform, category));
+      await sleep(2000 + Math.random() * 3000);
+    }
+  }
+}
+await browser.close();
+await addLastSuccess(boards);
+
+const snapshot = { schemaVersion: 2, date, runId, generatedAt: now.toISOString(), boards };
+const run = {
+  schemaVersion: 2,
+  runId,
+  date,
+  generatedAt: now.toISOString(),
+  attempted: boards.length,
+  successful: boards.filter(item => item.status === "success").length,
+  failed: boards.filter(item => item.status === "failed").length,
+  targets: boards.map(({ country, platform, category, status, error, products }) => ({
+    country, platform, category, status, error, records: products.length,
+  })),
+};
+await fs.writeFile(path.join(outDir, `${date}.json`), JSON.stringify(snapshot, null, 2) + "\n");
+await fs.writeFile(path.join(outDir, "latest.json"), JSON.stringify(snapshot, null, 2) + "\n");
+await fs.writeFile(path.join(outDir, "_runs", date, `${runId}.json`), JSON.stringify(run, null, 2) + "\n");
+
+let dates = [];
+try { dates = JSON.parse(await fs.readFile(path.join(outDir, "index.json"), "utf8")).dates || []; }
+catch {}
+dates = [date, ...dates.filter(item => item !== date)];
+await fs.writeFile(path.join(outDir, "index.json"), JSON.stringify({
+  schemaVersion: 2,
+  dates,
+  updatedAt: now.toISOString(),
+  latestRun: run,
+}, null, 2) + "\n");
+console.log(JSON.stringify(run));
