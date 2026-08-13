@@ -20,7 +20,7 @@ const tools: Tool[] = [
   { id: "freight", name: "快递体积重", eyebrow: "SHIPPING", desc: "比较实际重量与体积重量，估算计费重", category: "生活", tone: "orange", mark: "◫" },
   { id: "time", name: "双城时间", eyebrow: "DUBAI · SHANGHAI", desc: "迪拜与上海时间即时对照", category: "生活", tone: "indigo", mark: "◷" },
   { id: "english", name: "每日英语", eyebrow: "DAILY · 08:00 DXB", desc: "5 个单词、3 个句子、对话、复习与表达模板", category: "学习", tone: "blue", mark: "Aa", href: "/english" },
-  { id: "market", name: "MEA 电商分析", eyebrow: "WORKSPACE", desc: "市场数据、SMR 与渠道报告工作台", category: "工作", tone: "amber", mark: "▥", status: "规划中" },
+  { id: "market", name: "电渠 TOP 畅销品监控看板", eyebrow: "UAE · KSA · DAILY", desc: "六大榜单、华为席位、排名变化与竞争告警", category: "工作", tone: "amber", mark: "▥", href: "/bestsellers" },
 ];
 
 const categories = ["全部", "生活", "工作", "学习"];
