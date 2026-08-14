@@ -45,35 +45,8 @@
 .big-result{background:var(--cobalt)}
 .big-result small{color:#dce7f4}
 
-/* Daily intelligence reader */
-.daily-brief .news-lead{gap:40px}
-.daily-brief .news-lead>strong{max-width:780px}
-.brief-summary{margin:0;padding:0 28px 34px;max-width:980px;color:#d8e3f1;font-size:16px;line-height:1.75}
-.brief-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid rgba(237,234,223,.24)}
-.brief-sections>section{padding:32px 28px;border-right:1px solid rgba(237,234,223,.24);border-bottom:1px solid rgba(237,234,223,.24)}
-.brief-sections>section:nth-child(2n){border-right:0}
-.brief-sections>section:first-child{grid-column:1/-1;background:var(--ink)}
-.brief-sections>section>header{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
-.brief-sections>section>header span{font:10px var(--font-geist-mono),monospace;color:var(--mist)}
-.brief-sections h3{margin:0;color:var(--mist);font-size:19px;letter-spacing:-.02em}
-.brief-item{padding:20px 0;border-top:1px solid rgba(237,234,223,.22)}
-.brief-item:first-of-type{border-top:0}
-.brief-item-head{display:flex;justify-content:space-between;gap:14px;font:10px var(--font-geist-mono),monospace;color:#b9c7db}
-.brief-item-head a{color:var(--mist);text-decoration:none}
-.brief-item h4{margin:12px 0;font-size:20px;line-height:1.35;color:var(--white)}
-.brief-item p{margin:9px 0;color:#d8e0ec;font-size:14px;line-height:1.7}
-.brief-item p b{display:block;margin-bottom:2px;color:var(--mist);font-size:11px;letter-spacing:.05em}
-.brief-item .brief-action{margin-top:14px;padding:13px 15px;background:rgba(143,171,208,.14);border-left:2px solid var(--mist)}
-.brief-empty{margin:0;color:#9eacc0;font-size:13px}
-.daily-brief .news-source-note{color:#bdc9d8;border-color:rgba(237,234,223,.24)}
-
 @media(max-width:760px){
   .english-page-body{box-shadow:none}
   .rank-head,.english-page-head{padding-left:20px;padding-right:20px}
   .rank-kpis strong{font-size:36px}
-  .brief-sections{grid-template-columns:1fr}
-  .brief-sections>section,.brief-sections>section:nth-child(2n){border-right:0}
-  .brief-sections>section:first-child{grid-column:auto}
-  .brief-summary{padding:0 20px 28px;font-size:14px}
-  .brief-item h4{font-size:18px}
 }
