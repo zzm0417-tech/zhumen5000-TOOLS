@@ -16,12 +16,12 @@ type Tool = {
 };
 
 const tools: Tool[] = [
+  { id: "market", name: "电渠 TOP 畅销品监控看板", eyebrow: "UAE · KSA · DAILY", desc: "六大榜单、华为席位、排名变化与竞争告警", category: "工作", tone: "amber", mark: "▥", href: "/bestsellers" },
+  { id: "english", name: "每日英语", eyebrow: "DAILY · 08:00 DXB", desc: "5 个单词、3 个句子、对话、复习与表达模板", category: "学习", tone: "blue", mark: "Aa", href: "/english" },
   { id: "unit", name: "全能单位转换器", eyebrow: "UNIT · CURRENCY · LIVE", desc: "汇率、长度、面积、重量、温度一站转换", category: "生活", tone: "lime", mark: "↔" },
   { id: "fx", name: "多币种快捷换算", eyebrow: "FINANCE · LIVE", desc: "AED、SAR、CNY、USD、EUR 即时换算", category: "生活", tone: "cyan", mark: "¥" },
   { id: "freight", name: "快递体积重", eyebrow: "SHIPPING", desc: "比较实际重量与体积重量，估算计费重", category: "生活", tone: "orange", mark: "◫" },
   { id: "time", name: "双城时间", eyebrow: "DUBAI · SHANGHAI", desc: "迪拜与上海时间即时对照", category: "生活", tone: "indigo", mark: "◷" },
-  { id: "english", name: "每日英语", eyebrow: "DAILY · 08:00 DXB", desc: "5 个单词、3 个句子、对话、复习与表达模板", category: "学习", tone: "blue", mark: "Aa", href: "/english" },
-  { id: "market", name: "电渠 TOP 畅销品监控看板", eyebrow: "UAE · KSA · DAILY", desc: "六大榜单、华为席位、排名变化与竞争告警", category: "工作", tone: "amber", mark: "▥", href: "/bestsellers" },
   { id: "whiteboard", name: "创作白板", eyebrow: "EXCALIDRAW · LOCAL FIRST", desc: "画流程、做脑暴、写方案；自动保存在当前浏览器", category: "创作", tone: "rose", mark: "✎", href: "/whiteboard" },
 ];
 

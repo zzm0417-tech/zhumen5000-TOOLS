@@ -1,0 +1,52 @@
+/* Alex Tool Hub — blue editorial design system */
+.english-page,.rank-page,.whiteboard-page,.glance-page{background:var(--paper)}
+.back-home,.glance-head small{color:var(--cobalt)}
+.english-page-head h1 em,.rank-head h1 em,.glance-head h1 em{color:var(--cobalt)}
+.english-page-body{background:rgba(248,246,238,.5);box-shadow:14px 14px 0 rgba(143,171,208,.45)}
+.lesson-archive{background:var(--mist)}
+.lesson-hero{background:var(--ink)}
+.lesson-hero>span b,.dialogue b,.quiz-card>header>strong{color:var(--mist)}
+.template-card{background:var(--mist)}
+.word-list article,.quiz-options label,.quiz-card{background:rgba(248,246,238,.72)}
+.quiz-options label:has(input:checked){border-color:var(--cobalt);background:#dfe8f4}
+.quiz-options input{accent-color:var(--cobalt)}
+.submit-quiz{background:var(--cobalt)}
+.retry-quiz{background:var(--mist);color:var(--ink)}
+.integrity{background:var(--mist)}
+.rank-kpis article,.board-grid article{background:rgba(248,246,238,.68)}
+.rank-kpis .alert-kpi{background:var(--cobalt)}
+.rank-tr.huawei{background:#dbe6f3}
+.rank-filters button.active{background:var(--cobalt);border-color:var(--cobalt)}
+.rank-alert{background:#d8e3f0}
+.rank-time i{background:var(--mist)}
+.control-group{border-color:var(--line);background:rgba(248,246,238,.74)}
+.control-group button{border-color:var(--line);background:var(--white)}
+.control-group button.active{background:var(--cobalt);border-color:var(--cobalt);color:white}
+.control-group select{border-color:var(--line);background:var(--white)}
+.integrity-warn{background:#dfe7f2!important;color:#294f8c!important}
+.source-note{border-left-color:var(--cobalt);background:#dfe7f2}
+.rank-tr a{color:var(--cobalt)}
+.board-bar,.glance-nav{background:var(--paper)}
+.board-actions a,.shortcut-grid a{background:var(--white)}
+.g-card{background:rgba(248,246,238,.74);border-color:var(--line)}
+.g-todos form button{background:var(--mist)}
+.shortcut-grid a:hover{background:var(--mist)}
+.glance-embedded{background:var(--ink)}
+.glance-embedded .glance-head small,.glance-embedded .news-columns h3{color:var(--mist)}
+.glance-embedded .g-weather{background:var(--mist)}
+.glance-embedded .g-card{background:var(--paper)}
+.glance-embedded .g-news{background:var(--cobalt)}
+.glance-embedded .news-columns a:hover strong{color:var(--mist)}
+.glance-embedded .shortcut-grid a:hover{background:var(--cobalt);color:white}
+.hero:after{border-radius:0!important;border-color:rgba(77,113,172,.24)!important;box-shadow:0 0 0 5vw rgba(143,171,208,.08),0 0 0 10vw rgba(77,113,172,.04)!important;transform:rotate(45deg)}
+.tool-section{background:linear-gradient(180deg,var(--paper),#dce5ef)}
+.panel{background:var(--paper);border:1px solid var(--mist);box-shadow:18px 18px 0 rgba(3,3,0,.28)}
+.close{color:var(--cobalt)}
+.big-result{background:var(--cobalt)}
+.big-result small{color:#dce7f4}
+
+@media(max-width:760px){
+  .english-page-body{box-shadow:none}
+  .rank-head,.english-page-head{padding-left:20px;padding-right:20px}
+  .rank-kpis strong{font-size:36px}
+}
