@@ -1,14 +1,15 @@
 {
   "schemaVersion": 2,
   "dates": [
+    "2026-08-14",
     "2026-08-13"
   ],
-  "updatedAt": "2026-08-13T11:03:26.564Z",
+  "updatedAt": "2026-08-14T08:42:42.068Z",
   "latestRun": {
     "schemaVersion": 2,
-    "runId": "2026-08-13T11-03-26-564Z",
-    "date": "2026-08-13",
-    "generatedAt": "2026-08-13T11:03:26.564Z",
+    "runId": "2026-08-14T08-42-42-068Z",
+    "date": "2026-08-14",
+    "generatedAt": "2026-08-14T08:42:42.068Z",
     "attempted": 24,
     "successful": 0,
     "failed": 24,
@@ -18,7 +19,7 @@
         "platform": "amazon",
         "category": "phone",
         "status": "failed",
-        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.ae/s?k=smartphones&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.ae/s?k=smartphones&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
         "records": 0
       },
       {
@@ -26,7 +27,7 @@
         "platform": "amazon",
         "category": "audio",
         "status": "failed",
-        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.ae/s?k=wireless%20earbuds%20headphones&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.ae/s?k=wireless%20earbuds%20headphones&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
         "records": 0
       },
       {
@@ -34,7 +35,7 @@
         "platform": "amazon",
         "category": "wearable",
         "status": "failed",
-        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
+        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.ae/s?k=smart%20watches%20fitness%20trackers&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.ae/s?k=smart%20watches%20fitness%20trackers&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
         "records": 0
       },
       {
@@ -82,7 +83,7 @@
         "platform": "amazon",
         "category": "phone",
         "status": "failed",
-        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.sa/s?k=smartphones&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.sa/s?k=smartphones&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
         "records": 0
       },
       {
@@ -162,7 +163,7 @@
         "platform": "amazon",
         "category": "wearable",
         "status": "failed",
-        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.eg/s?k=smart%20watches%20fitness%20trackers&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.eg/s?k=smart%20watches%20fitness%20trackers&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
         "records": 0
       },
       {
@@ -170,7 +171,7 @@
         "platform": "amazon",
         "category": "tablet",
         "status": "failed",
-        "error": "page.goto: net::ERR_INVALID_RESPONSE at https://www.amazon.eg/s?k=tablets&s=exact-aware-popularity-rank\nCall log:\n  - navigating to \"https://www.amazon.eg/s?k=tablets&s=exact-aware-popularity-rank\", waiting until \"domcontentloaded\"\n",
+        "error": "页面解析仅得到 0 个商品，未达到最低完整性要求",
         "records": 0
       },
       {
