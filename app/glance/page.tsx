@@ -25,7 +25,7 @@ export default function GlancePage({embedded=false}:{embedded?:boolean}) {
     fetch("https://api.open-meteo.com/v1/forecast?latitude=25.2048&longitude=55.2708&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FDubai&forecast_days=5").then(r=>r.json()).then(d=>{setWeather(d.current);setForecast(d.daily)}).catch(()=>{});
     fetch("https://open.er-api.com/v6/latest/AED").then(r=>r.json()).then(d=>d.rates&&setRates({CNY:d.rates.CNY,SAR:d.rates.SAR,USD:d.rates.USD,EUR:d.rates.EUR})).catch(()=>{});return()=>window.clearInterval(timer)},[]);
   useEffect(()=>{
-    fetch("/data/daily-brief/latest.json",{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{if(isPublishableBrief(d))setBrief(d)}).catch(()=>setBrief(null));
+    fetch(`/data/daily-brief/latest.json?v=${Date.now()}`,{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{if(isPublishableBrief(d))setBrief(d)}).catch(()=>setBrief(null));
     fetch("/api/news").then(r=>r.json()).then(d=>setNews(d.items||[])).catch(()=>setNews([]));
   },[]);
   useEffect(()=>{localStorage.setItem("alex-glance-todos",JSON.stringify(todos))},[todos]);
