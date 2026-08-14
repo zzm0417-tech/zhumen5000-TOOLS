@@ -25,11 +25,14 @@ const tools: Tool[] = [
   { id: "whiteboard", name: "创作白板", eyebrow: "EXCALIDRAW · LOCAL FIRST", desc: "画流程、做脑暴、写方案；自动保存在当前浏览器", category: "创作", tone: "rose", mark: "✎", href: "/whiteboard" },
 ];
 
-const categories = ["全部", "生活", "工作", "学习", "创作"];
+const quickLinks = [
+  { name: "GitHub", meta: "代码仓库", href: "https://github.com/zzm0417-tech/zhumen5000-TOOLS" },
+  { name: "Cloudflare", meta: "部署管理", href: "https://dash.cloudflare.com/" },
+  { name: "Amazon UAE", meta: "渠道观察", href: "https://www.amazon.ae/" },
+  { name: "Noon", meta: "渠道观察", href: "https://www.noon.com/uae-en/" },
+];
 
 export default function Home() {
-  const [category, setCategory] = useState("全部");
-  const [query, setQuery] = useState("");
   const [active, setActive] = useState<string | null>(null);
   const [now, setNow] = useState(new Date());
 
@@ -37,11 +40,6 @@ export default function Home() {
     const timer = window.setInterval(() => setNow(new Date()), 1000);
     return () => window.clearInterval(timer);
   }, []);
-
-  const visible = useMemo(() => tools.filter((tool) =>
-    (category === "全部" || tool.category === category) &&
-    `${tool.name}${tool.desc}${tool.eyebrow}`.toLowerCase().includes(query.toLowerCase())
-  ), [category, query]);
 
   const openTool = (tool: Tool) => {
     if (tool.href?.startsWith("/")) window.location.assign(tool.href);
@@ -56,39 +54,43 @@ export default function Home() {
         <div className="nav-meta"><span className="online-dot" /> SYSTEM ONLINE <span className="divider" /> {formatTime(now, "Asia/Dubai")}</div>
       </nav>
 
-      <section className="hero" id="top">
-        <div className="hero-kicker"><span>PERSONAL OPERATING SYSTEM</span><span>DXB · 2026</span></div>
-        <h1>把复杂的事，<br /><em>变成趁手的工具。</em></h1>
-        <p>生活、工作与创作的统一入口。需要的时候，它们都在这里。</p>
-        <div className="search-wrap">
-          <span>⌕</span>
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜索工具…" aria-label="搜索工具" />
-          <kbd>⌘ K</kbd>
-        </div>
-      </section>
+      <section className="launchpad" id="top">
+        <header className="launchpad-head">
+          <div><small>PERSONAL TOOLKIT · 11 ENTRIES</small><h1>工具启动台</h1></div>
+          <p>常用工作、学习与生活工具集中在首屏，点击即可进入。</p>
+        </header>
 
-      <GlancePage embedded />
-
-      <section className="tool-section">
-        <div className="section-head">
-          <div><span className="section-index">01</span><h2>全部工具</h2><small>{visible.length.toString().padStart(2, "0")} TOOLS AVAILABLE</small></div>
-          <div className="filters" role="tablist" aria-label="工具分类">
-            {categories.map((item) => <button key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item)}>{item}</button>)}
-          </div>
-        </div>
-
-        <div className="tool-grid">
-          {visible.map((tool, index) => (
-            <button className={`tool-card ${tool.tone}`} key={tool.id} onClick={() => openTool(tool)}>
-              <span className="card-number">{String(index + 1).padStart(2, "0")}</span>
-              <span className="tool-mark">{tool.mark}</span>
-              <span className="tool-copy"><small>{tool.eyebrow}</small><strong>{tool.name}</strong><span>{tool.desc}</span></span>
-              <span className="card-foot"><span>{tool.status ?? "立即使用"}</span><b>{tool.status ? "·" : "↗"}</b></span>
+        <div className="launch-primary" aria-label="核心工具">
+          {tools.slice(0,2).map((tool,index) => (
+            <button className={`launch-card launch-card-primary launch-${tool.id}`} key={tool.id} onClick={() => openTool(tool)}>
+              <span className="launch-number">{String(index+1).padStart(2,"0")}</span>
+              <span className="launch-mark">{tool.mark}</span>
+              <span className="launch-copy"><small>{tool.eyebrow}</small><strong>{tool.name}</strong><span>{tool.desc}</span></span>
+              <b className="launch-arrow">↗</b>
             </button>
           ))}
         </div>
-        {visible.length === 0 && <div className="empty">没有找到匹配的工具。</div>}
+
+        <div className="launch-secondary" aria-label="全部工具">
+          {tools.slice(2).map((tool,index) => (
+            <button className="launch-card launch-card-compact" key={tool.id} onClick={() => openTool(tool)}>
+              <span className="launch-number">{String(index+3).padStart(2,"0")}</span>
+              <span className="launch-mark">{tool.mark}</span>
+              <span className="launch-copy"><small>{tool.eyebrow}</small><strong>{tool.name}</strong></span>
+              <b className="launch-arrow">↗</b>
+            </button>
+          ))}
+        </div>
+
+        <div className="launch-links-head"><span>QUICK LINKS</span><small>常用站点</small></div>
+        <nav className="launch-links" aria-label="快捷导航">
+          {quickLinks.map((link,index) => <a key={link.name} href={link.href} target="_blank" rel="noreferrer">
+            <span>{String(index+1).padStart(2,"0")}</span><small>{link.meta}</small><strong>{link.name}</strong><b>↗</b>
+          </a>)}
+        </nav>
       </section>
+
+      <GlancePage embedded />
 
       <footer><span>PRIVATE TOOLS, BUILT AROUND ALEX.</span><span>ALL SYSTEMS READY</span></footer>
       {active && <ToolPanel id={active} now={now} close={() => setActive(null)} />}
